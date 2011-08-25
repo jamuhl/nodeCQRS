@@ -1,0 +1,19 @@
+#-----------------------------------------------------------------
+# BUILD WITH CAKE
+#
+#  source: https://github.com/jashkenas/coffee-script/wiki/%5BHowTo%5D-Compiling-and-Setting-Up-Build-Tools
+
+{exec} = require 'child_process'
+
+task 'module', 'loads needed node.js modules', ->
+
+    out = (err, stdout, stderr) ->
+        throw err if err
+        console.log stdout + stderr
+        
+    exec 'npm install coffee-script', out
+    exec 'npm install redis', out
+    exec 'npm install hiredis', out
+
+
+

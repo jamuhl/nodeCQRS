@@ -1,0 +1,10 @@
+{
+    "name": "SimpleCQRS.Host"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+    , "redis": ">= 0.0.1"
+    , "hiredis": ">= 0.0.1"
+    , "coffee-script": ">= 1.0.0"
+  }
+}
