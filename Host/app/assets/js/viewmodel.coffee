@@ -16,7 +16,7 @@ class ViewModel
         @newItem = ko.observable('')
         
     createItem: ->
-        PubSub.publish('createItem', {text: @newItem()})
+        PubSub.publish('createItem', {id: new ObjectId().toString(), payload: {text: @newItem()}})
         @newItem('')
         
         

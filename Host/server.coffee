@@ -83,13 +83,15 @@ io.sockets.on 'connection', (socket) ->
     console.log colors.magenta(user + ' -- connects to socket.io')
     
     socket.on 'createItem', (data) ->
-        console.log colors.magenta(user + ' -- sends command createItem: ' + JSON.stringify(data))
-        
-        hub.emit 'createItem' , data
+        console.log colors.magenta(user + ' -- sends command createItem:')
+        console.log(JSON.stringify(data))
+
+        hub.emit 'createItem', user, data
 
 # receive events
 hub.on 'itemCreated', (data) ->
-    console.log colors.magenta('socket.io -- publish event itemCreated to browser ' + JSON.stringify(data))
+    console.log colors.magenta('socket.io -- publish event itemCreated to browser')
+    console.log(JSON.stringify(data))
     io.sockets.emit 'itemCreated', data
     
 

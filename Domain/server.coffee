@@ -20,11 +20,13 @@ cmd = redis.createClient()
 evt = redis.createClient()
 
 cmd.on 'message', (channel, message) ->
-    console.log colors.blue('received command from redis: ' + message)
+    console.log colors.blue('received command from redis:')
+    console.log(message)
     
-    console.log 'handle command: ' + message
+    console.log '-> handle command'
     
-    console.log colors.green('publishing event to redis: ' + message)
+    console.log colors.green('publishing event to redis:')
+    console.log(message)
     
     evt.publish('events', message)
 

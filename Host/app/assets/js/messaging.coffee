@@ -14,7 +14,7 @@ socket = io.connect('http://localhost:3030');
 
 # send command via socket.io
 PubSub.subscribe('createItem', (msg, data) ->
-	if data.text? && data.text != ''
+	if data.payload.text? && data.payload.text != ''
 		socket.emit('createItem', data)
 )
 
@@ -29,8 +29,8 @@ socket.on('itemCreated', (data) ->
 
 # and pass it to slientside bus
 PubSub.subscribe('itemCreated', (msg, data) ->
-	if data.text? && data.text != ''
-		root.viewmodel.items.push(data.text)
+	if data.payload.text? && data.payload.text != ''
+		root.viewmodel.items.push(data.payload.text)
 )
 
 

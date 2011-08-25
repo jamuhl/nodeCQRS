@@ -9,7 +9,10 @@
     }
     ViewModel.prototype.createItem = function() {
       PubSub.publish('createItem', {
-        text: this.newItem()
+        id: new ObjectId().toString(),
+        payload: {
+          text: this.newItem()
+        }
       });
       return this.newItem('');
     };
