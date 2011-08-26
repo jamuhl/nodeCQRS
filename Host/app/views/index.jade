@@ -6,8 +6,10 @@ input(id='newItem', type='text', placeholder='create new Item...', data-bind="va
 button(data-bind="click: createItem") create
 
 ol(data-bind="template: { name: 'itemTemplate', foreach: items }")
-
+span(data-bind='text: "items: " + items().length')
 
 // TEMPLATES
 script(id='itemTemplate', type='text/html')
-	li ${$data}
+    li 
+        span(data-bind='text: text()')
+        button(data-bind="click: function() { viewmodel.deleteItem($data) }") remove

@@ -20,15 +20,33 @@ cmd = redis.createClient()
 evt = redis.createClient()
 
 cmd.on 'message', (channel, message) ->
-    console.log colors.blue('received command from redis:')
+    console.log colors.blue('\nreceived command from redis:')
     console.log(message)
     
     console.log '-> handle command'
     
-    console.log colors.green('publishing event to redis:')
-    console.log(message)
+    msg = JSON.parse(message)
     
-    evt.publish('events', message)
+    msg.event = if (msg.command == 'createItem') then 'itemCreated' else 'itemDeleted'
+    msg.command = null
+    
+    if msg.payload.id?
+        message = JSON.stringify(msg)
+        
+        console.log colors.green('\npublishing event to redis:')
+        console.log(message)
+        
+        evt.publish('events', message)
+    else
+        # get an new id from redis
+        evt.incr 'nextItemId', ( err, id ) ->
+            msg.payload.id = 'item:' + id
+            message = JSON.stringify(msg)
+        
+            console.log colors.green('\npublishing event to redis:')
+            console.log(message)
+            
+            evt.publish('events', message)
 
 cmd.subscribe('commands')
 

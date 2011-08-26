@@ -13,25 +13,26 @@ socket = io.connect('http://localhost:3030');
 # COMMANDS 
 
 # send command via socket.io
-PubSub.subscribe('createItem', (msg, data) ->
+PubSub.subscribe 'createItem', (msg, data) ->
 	if data.payload.text? && data.payload.text != ''
 		socket.emit('createItem', data)
-)
+
+
+PubSub.subscribe 'deleteItem', (msg, data) ->
+        socket.emit('deleteItem', data)
 
 #-----------------------------------------------------------------
 # EVENTS 
 
 # receive event from socket.io
-socket.on('itemCreated', (data) ->
+socket.on 'itemCreated', (data) ->
 	# publish to clientside bus
 	PubSub.publish('itemCreated', data)
-)
+    
+socket.on 'itemDeleted', (data) ->
+    PubSub.publish('itemDeleted', data)
 
-# and pass it to slientside bus
-PubSub.subscribe('itemCreated', (msg, data) ->
-	if data.payload.text? && data.payload.text != ''
-		root.viewmodel.items.push(data.payload.text)
-)
+
 
 
 
