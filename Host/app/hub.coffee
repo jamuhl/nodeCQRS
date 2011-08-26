@@ -20,17 +20,19 @@ exports.emit = (commandName, sender, message) ->
     console.log data
     cmd.publish('commands', data)
     
-exports.on = (eventName, callback) ->
-    subscriptions.push({eventName: eventName, callback: callback})
+exports.on = (channel, callback) ->
+    subscriptions.push({channel: channel, callback: callback})
     console.log colors.blue('hub -- subscribers: ' + subscriptions.length)
     
 evt.on 'message', (channel, message) ->
     for subscriber in subscriptions
         do (subscriber) ->
-            if (message.indexOf(subscriber.eventName) > -1)
-                console.log colors.green('\nhub -- received event ' + subscriber.eventName + ' from redis:')
+            if (channel == subscriber.channel)
+                data = map.from(subscriber.channel, message)
+                
+                console.log colors.green('\nhub -- received event ' + data.event + ' from redis:')
                 console.log message
-                data = map.from(subscriber.eventName, message)
+                
                 subscriber.callback(data)
         
 evt.subscribe('events')

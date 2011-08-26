@@ -11,5 +11,12 @@ span(data-bind='text: "items: " + items().length')
 // TEMPLATES
 script(id='itemTemplate', type='text/html')
     li 
+        {{if $data == viewmodel.selectedItem()}}
+        input(data-bind='value: text')
+        button(data-bind="click: function() { viewmodel.changeItem() }") save
+        button(data-bind="click: function() { viewmodel.selectItem('')  }") cancel
+        {{else}}
         span(data-bind='text: text()')
+        button(data-bind="click: function() { viewmodel.selectItem($data) }") edit
         button(data-bind="click: function() { viewmodel.deleteItem($data) }") remove
+        {{/if}}

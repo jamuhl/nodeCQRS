@@ -20,32 +20,54 @@ class ViewModel
     constructor: ->
         @items = ko.observableArray([])
         @newItem = ko.observable('')
+        @selectedItem = ko.observable('')
         
     createItem: ->
-        PubSub.publish('createItem', {id: new ObjectId().toString(), payload: {text: @newItem()}})
+        PubSub.publish('commands', {id: new ObjectId().toString(), command: 'createItem', payload: {text: @newItem()}})
         @newItem('')
+    
+    selectItem: (item) ->
+        @selectedItem(item)
         
+    changeItem: ->
+        @selectedItem('')
+        PubSub.publish('commands', {id: new ObjectId().toString(), command: 'changeItem', payload: {id: @selectedItem().id, text: @selectedItem().text}})
+                
     deleteItem: (item) ->
-        PubSub.publish('deleteItem', {id: new ObjectId().toString(), payload: {id: item.id}})
-
-
-# Update viewmodel
-PubSub.subscribe 'itemCreated', (msg, data) ->
-	if data.payload.text? && data.payload.text != ''
-        item = new Item(data.payload.id, data.payload.text)
-		root.viewmodel.items.push(item)
+        PubSub.publish('commands', {id: new ObjectId().toString(), command: 'deleteItem', payload: {id: item.id}})
         
-PubSub.subscribe 'itemDeleted', (msg, data) ->
-    for item in root.viewmodel.items()
-        do (item) ->
-            root.viewmodel.items.remove(item) if item.id == data.payload.id
+    _itemCreated: (item) ->
+        @items.push(item)
+        
+    _itemChanged: (id, text) ->
+        for item in @items()
+            do (item) =>
+                if item.id == id
+                    item.text = text
+        
+    _itemDeleted: (id) ->
+        for item in @items()
+            do (item) =>
+                @items.remove(item) if item.id == id
+
         
 #-----------------------------------------------------------------
 # BIND
 
 # add a viewmodel to root
-root.viewmodel = new ViewModel()
+root.viewmodel = viewmodel = new ViewModel()
 root.item = Item
 
 # bind
 ko.applyBindings(root.viewmodel)
+
+# Update viewmodel
+PubSub.subscribe 'events', (msg, data) ->
+    if data.event == 'itemCreated'
+        viewmodel._itemCreated(new Item(data.payload.id, data.payload.text))
+        
+    if data.event == 'itemChanged'
+        viewmodel._itemChanged(data.payload.id, data.payload.text)
+        
+    if data.event == 'itemDeleted'
+        viewmodel._itemDeleted(data.payload.id)

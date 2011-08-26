@@ -1,6 +1,7 @@
 (function() {
   ﻿;
-  var Item, ViewModel, root;
+  var Item, ViewModel, root, viewmodel;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
   Item = (function() {
     function Item(id, text) {
@@ -13,48 +14,86 @@
     function ViewModel() {
       this.items = ko.observableArray([]);
       this.newItem = ko.observable('');
+      this.selectedItem = ko.observable('');
     }
     ViewModel.prototype.createItem = function() {
-      PubSub.publish('createItem', {
+      PubSub.publish('commands', {
         id: new ObjectId().toString(),
+        command: 'createItem',
         payload: {
           text: this.newItem()
         }
       });
       return this.newItem('');
     };
-    ViewModel.prototype.deleteItem = function(item) {
-      return PubSub.publish('deleteItem', {
+    ViewModel.prototype.selectItem = function(item) {
+      return this.selectedItem(item);
+    };
+    ViewModel.prototype.changeItem = function() {
+      this.selectedItem('');
+      return PubSub.publish('commands', {
         id: new ObjectId().toString(),
+        command: 'changeItem',
+        payload: {
+          id: this.selectedItem().id,
+          text: this.selectedItem().text
+        }
+      });
+    };
+    ViewModel.prototype.deleteItem = function(item) {
+      return PubSub.publish('commands', {
+        id: new ObjectId().toString(),
+        command: 'deleteItem',
         payload: {
           id: item.id
         }
       });
     };
+    ViewModel.prototype._itemCreated = function(item) {
+      return this.items.push(item);
+    };
+    ViewModel.prototype._itemChanged = function(id, text) {
+      var item, _i, _len, _ref, _results;
+      _ref = this.items();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        _results.push(__bind(function(item) {
+          if (item.id === id) {
+            return item.text = text;
+          }
+        }, this)(item));
+      }
+      return _results;
+    };
+    ViewModel.prototype._itemDeleted = function(id) {
+      var item, _i, _len, _ref, _results;
+      _ref = this.items();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        _results.push(__bind(function(item) {
+          if (item.id === id) {
+            return this.items.remove(item);
+          }
+        }, this)(item));
+      }
+      return _results;
+    };
     return ViewModel;
   })();
-  PubSub.subscribe('itemCreated', function(msg, data) {
-    var item;
-    if ((data.payload.text != null) && data.payload.text !== '') {
-      item = new Item(data.payload.id, data.payload.text);
-    }
-    return root.viewmodel.items.push(item);
-  });
-  PubSub.subscribe('itemDeleted', function(msg, data) {
-    var item, _i, _len, _ref, _results;
-    _ref = root.viewmodel.items();
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      item = _ref[_i];
-      _results.push((function(item) {
-        if (item.id === data.payload.id) {
-          return root.viewmodel.items.remove(item);
-        }
-      })(item));
-    }
-    return _results;
-  });
-  root.viewmodel = new ViewModel();
+  root.viewmodel = viewmodel = new ViewModel();
   root.item = Item;
   ko.applyBindings(root.viewmodel);
+  PubSub.subscribe('events', function(msg, data) {
+    if (data.event === 'itemCreated') {
+      viewmodel._itemCreated(new Item(data.payload.id, data.payload.text));
+    }
+    if (data.event === 'itemChanged') {
+      viewmodel._itemChanged(data.payload.id, data.payload.text);
+    }
+    if (data.event === 'itemDeleted') {
+      return viewmodel._itemDeleted(data.payload.id);
+    }
+  });
 }).call(this);

@@ -16,6 +16,13 @@ for arg in process.argv
 #-----------------------------------------------------------------
 # APP BOOTSTRAPPING
 
+map = {
+    createItem: 'itemCreated',
+    changeItem: 'itemChanged',
+    deleteItem: 'itemDeleted'
+}
+
+
 cmd = redis.createClient()
 evt = redis.createClient()
 
@@ -23,12 +30,12 @@ cmd.on 'message', (channel, message) ->
     console.log colors.blue('\nreceived command from redis:')
     console.log(message)
     
-    console.log '-> handle command'
+    console.log colors.cyan('\n-> handle command')
     
     msg = JSON.parse(message)
-    
-    msg.event = if (msg.command == 'createItem') then 'itemCreated' else 'itemDeleted'
-    msg.command = null
+    msg.id = msg.id + '_event_0'
+    msg.event = if map[msg.command]? then map[msg.command] else 'unknown'
+    msg.command = undefined
     
     if msg.payload.id?
         message = JSON.stringify(msg)

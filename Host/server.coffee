@@ -82,28 +82,17 @@ io.sockets.on 'connection', (socket) ->
     user = socket.handshake.address.address + ":" + socket.handshake.address.port
     console.log colors.magenta(user + ' -- connects to socket.io')
     
-    socket.on 'createItem', (data) ->
-        console.log colors.magenta('\n' + user + ' -- sends command createItem:')
+    socket.on 'commands', (data) ->
+        console.log colors.magenta('\n' + user + ' -- sends command ' + data.command + ':')
         console.log(JSON.stringify(data))
 
-        hub.emit 'createItem', user, data
-        
-    socket.on 'deleteItem', (data) ->
-        console.log colors.magenta('\n' + user + ' -- sends command deleteItem:')
-        console.log(JSON.stringify(data))
-
-        hub.emit 'deleteItem', user, data
+        hub.emit data.command, user, data
 
 # receive events
-hub.on 'itemCreated', (data) ->
-    console.log colors.magenta('\nsocket.io -- publish event itemCreated to browser')
+hub.on 'events', (data) ->
+    console.log colors.magenta('\nsocket.io -- publish event ' + data.event + ' to browser')
     console.log(JSON.stringify(data))
-    io.sockets.emit 'itemCreated', data
-    
-hub.on 'itemDeleted', (data) ->
-    console.log colors.magenta('\nsocket.io -- publish event itemDeleted to browser')
-    console.log(JSON.stringify(data))
-    io.sockets.emit 'itemDeleted', data   
+    io.sockets.emit 'events', data
 
 #-----------------------------------------------------------------
 # START

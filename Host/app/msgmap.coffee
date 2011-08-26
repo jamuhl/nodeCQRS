@@ -1,36 +1,40 @@
 #-----------------------------------------------------------------
 # MAPPINGS
 
-commandMap = {
-    createItem: (commandName, sender, message) ->
+map = {}
+
+map.to = {
+    channelNeedsCustom: (channel, sender, message) ->
         msg = {
             id: message.id,
-            command: commandName,
+            command: message.command,
             sender: sender,
             payload: message.payload
         }
         JSON.stringify(msg)
-    , default: (commandName, sender, message) ->
+    , default: (channel, sender, message) ->
         msg = {
             id: message.id,
-            command: commandName,
+            command: message.command,
             sender: sender,
             payload: message.payload
         }
         JSON.stringify(msg)
 }
 
-eventMap = {
-    itemCreated: (eventName, message) ->
+map.from = {
+    channelNeedsCustom: (channel, message) ->
         msg = JSON.parse(message)
         data = {
             id: msg.id,
+            event: msg.event,
             payload: msg.payload
         }
-    , default: (eventName, message) ->
+    , default: (channel, message) ->
         msg = JSON.parse(message)
         data = {
             id: msg.id,
+            event: msg.event,
             payload: msg.payload
         }
 }
@@ -40,15 +44,15 @@ eventMap = {
 #-----------------------------------------------------------------
 # EXPORTS
 
-exports.to = (commandName, sender, message) ->
-    if commandMap[commandName]?
-        commandMap[commandName](commandName, sender, message)
+exports.to = (channel, sender, message) ->
+    if map.to[channel]?
+        map.to[channel](channel, sender, message)
     else
-        commandMap['default'](commandName, sender, message)
+        map.to['default'](channel, sender, message)
     
     
-exports.from = (eventName, message) ->
-    if eventMap[eventName]?
-        eventMap[eventName](eventName, message)
+exports.from = (channel, message) ->
+    if map.from[channel]?
+        map.from[channel](channel, message)
     else
-        eventMap['default'](eventName, message)
+        map.from['default'](channel, message)
