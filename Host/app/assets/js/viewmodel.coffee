@@ -30,8 +30,10 @@ class ViewModel
         @selectedItem(item)
         
     changeItem: ->
+        id = @selectedItem().id
+        text = @selectedItem().text()
         @selectedItem('')
-        PubSub.publish('commands', {id: new ObjectId().toString(), command: 'changeItem', payload: {id: @selectedItem().id, text: @selectedItem().text}})
+        PubSub.publish('commands', {id: new ObjectId().toString(), command: 'changeItem', payload: {id: id, text: text}})
                 
     deleteItem: (item) ->
         PubSub.publish('commands', {id: new ObjectId().toString(), command: 'deleteItem', payload: {id: item.id}})
@@ -43,7 +45,7 @@ class ViewModel
         for item in @items()
             do (item) =>
                 if item.id == id
-                    item.text = text
+                    item.text(text)
         
     _itemDeleted: (id) ->
         for item in @items()

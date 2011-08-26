@@ -16,7 +16,7 @@ script(id='itemTemplate', type='text/html')
         button(data-bind="click: function() { viewmodel.changeItem() }") save
         button(data-bind="click: function() { viewmodel.selectItem('')  }") cancel
         {{else}}
-        span(data-bind='text: text()')
+        span(data-bind='text: text')
         button(data-bind="click: function() { viewmodel.selectItem($data) }") edit
         button(data-bind="click: function() { viewmodel.deleteItem($data) }") remove
         {{/if}}

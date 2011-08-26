@@ -30,13 +30,16 @@
       return this.selectedItem(item);
     };
     ViewModel.prototype.changeItem = function() {
+      var id, text;
+      id = this.selectedItem().id;
+      text = this.selectedItem().text();
       this.selectedItem('');
       return PubSub.publish('commands', {
         id: new ObjectId().toString(),
         command: 'changeItem',
         payload: {
-          id: this.selectedItem().id,
-          text: this.selectedItem().text
+          id: id,
+          text: text
         }
       });
     };
@@ -60,7 +63,7 @@
         item = _ref[_i];
         _results.push(__bind(function(item) {
           if (item.id === id) {
-            return item.text = text;
+            return item.text(text);
           }
         }, this)(item));
       }
