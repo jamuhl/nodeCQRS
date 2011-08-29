@@ -1,5 +1,6 @@
 redis = require 'redis'
 colors = require './app/colors'
+handler = require './app/commandHandler'
 
 #-----------------------------------------------------------------
 # OPTIONS
@@ -16,44 +17,14 @@ for arg in process.argv
 #-----------------------------------------------------------------
 # APP BOOTSTRAPPING
 
-map = {
-    createItem: 'itemCreated',
-    changeItem: 'itemChanged',
-    deleteItem: 'itemDeleted'
-}
-
-
 cmd = redis.createClient()
-evt = redis.createClient()
 
 cmd.on 'message', (channel, message) ->
     console.log colors.blue('\nreceived command from redis:')
     console.log(message)
     
     console.log colors.cyan('\n-> handle command')
-    
-    msg = JSON.parse(message)
-    msg.id = msg.id + '_event_0'
-    msg.event = if map[msg.command]? then map[msg.command] else 'unknown'
-    msg.command = undefined
-    
-    if msg.payload.id?
-        message = JSON.stringify(msg)
-        
-        console.log colors.green('\npublishing event to redis:')
-        console.log(message)
-        
-        evt.publish('events', message)
-    else
-        # get an new id from redis
-        evt.incr 'nextItemId', ( err, id ) ->
-            msg.payload.id = 'item:' + id
-            message = JSON.stringify(msg)
-        
-            console.log colors.green('\npublishing event to redis:')
-            console.log(message)
-            
-            evt.publish('events', message)
+    handler.handle(JSON.parse(message))
 
 cmd.subscribe('commands')
 
