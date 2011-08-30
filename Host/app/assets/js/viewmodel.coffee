@@ -54,11 +54,16 @@ class ViewModel
 
         
 #-----------------------------------------------------------------
-# BIND
+# BOOTSTRAPPER
 
 # add a viewmodel to root
 root.viewmodel = viewmodel = new ViewModel()
 root.item = Item
+
+# load data
+$.post 'allItems.json', (data) ->
+    for item in data
+        viewmodel.items.push new Item(item.id, item.text)
 
 # bind
 ko.applyBindings(root.viewmodel)

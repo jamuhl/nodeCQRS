@@ -1,6 +1,6 @@
 h1 SimpleCQRS
-p At this point of development you can just send a command to the host to create a new item.
-p To see the app in action you should take a look at host and domain console window!
+p At this point of development you can create, change and delete items. 
+p They are saved in a read model for presentation and in an eventstore for domain persitance.
 
 input(id='newItem', type='text', placeholder='create new Item...', data-bind="value: newItem")
 button(data-bind="click: createItem") create
@@ -20,3 +20,5 @@ script(id='itemTemplate', type='text/html')
         button(data-bind="click: function() { viewmodel.selectItem($data) }") edit
         button(data-bind="click: function() { viewmodel.deleteItem($data) }") remove
         {{/if}}
+        
+p You can have multiple browser windows open - all get updated.

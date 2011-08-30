@@ -28,7 +28,7 @@ store = {
             # load history from redis
             (item, callback) ->
                 console.log colors.cyan('load history for id= ' +  item.id)
-                db.lrange item.id, 0, -1, (err, data) ->
+                db.lrange 'events:' + item.id, 0, -1, (err, data) ->
                     if (err)
                         callback err
                         
@@ -57,7 +57,7 @@ store = {
         for e in item.uncommittedEvents
             evt = JSON.stringify(e) 
             console.log evt
-            db.lpush item.id, evt
+            db.lpush 'events:' + item.id, evt
                 
         # todo pass errors
         callback null                    

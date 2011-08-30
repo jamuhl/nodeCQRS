@@ -4,7 +4,7 @@ store = require './storage'
 items = require './itemAggregate'
 
 map = {
-    mappings:  {
+    mappings: {
             createItem: 'itemCreated',
             changeItem: 'itemChanged',
             deleteItem: 'itemDeleted'
@@ -33,7 +33,6 @@ publisher = {
 class CommandHandler
     
     constructor: () ->
-        @evt = redis.createClient()
         
     handle: (cmd) -> 
         cmdName = cmd.command

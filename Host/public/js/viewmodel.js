@@ -87,6 +87,15 @@
   })();
   root.viewmodel = viewmodel = new ViewModel();
   root.item = Item;
+  $.post('allItems.json', function(data) {
+    var item, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      item = data[_i];
+      _results.push(viewmodel.items.push(new Item(item.id, item.text)));
+    }
+    return _results;
+  });
   ko.applyBindings(root.viewmodel);
   PubSub.subscribe('events', function(msg, data) {
     if (data.event === 'itemCreated') {

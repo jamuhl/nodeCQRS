@@ -20,6 +20,7 @@ task 'module', 'loads needed node.js modules', ->
     exec 'npm install socket.io', out
     exec 'npm install redis', out
     exec 'npm install hiredis', out
+    exec 'npm install async', out
 
 
 

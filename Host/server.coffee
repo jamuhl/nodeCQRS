@@ -1,6 +1,7 @@
 express = require 'express'
 stylus = require 'stylus'
 colors = require './app/colors'
+handler = require './app/eventDenormalizer'
 
 app = express.createServer()
 io = require('socket.io').listen(3030)
@@ -90,8 +91,11 @@ io.sockets.on 'connection', (socket) ->
 
 # receive events
 hub.on 'events', (data) ->
-    console.log colors.magenta('\nsocket.io -- publish event ' + data.event + ' to browser')
+    console.log colors.cyan('\eventDenormalizer -- denormalize event ' + data.event)
     console.log(JSON.stringify(data))
+    handler.handle(data)
+    
+    console.log colors.magenta('\nsocket.io -- publish event ' + data.event + ' to browser')
     io.sockets.emit 'events', data
 
 #-----------------------------------------------------------------
