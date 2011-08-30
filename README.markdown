@@ -2,6 +2,8 @@
 
 This is a first try to implement a CQRS / Eventsourcing Infrastructure in node.js using redis for Pub/Sub and Storage.
 
+For further information in wiki tutorial.
+
 ### prerequisition
 
 1. you need node.js [-> install node.js](https://github.com/joyent/node/wiki/Installation)
