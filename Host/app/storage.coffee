@@ -47,6 +47,8 @@ store = {
             db.del id, (err) ->
                 if err
                     callback err
+                    
+                callback null
 }
 
 
