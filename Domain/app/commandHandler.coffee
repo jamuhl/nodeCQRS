@@ -21,6 +21,7 @@ publisher = {
     evt: redis.createClient()
     ,
     publish: (evts) ->
+        evts[0].time = new Date()
         msg = JSON.stringify(evts[0])
         
         console.log colors.green('\npublishing event to redis:')

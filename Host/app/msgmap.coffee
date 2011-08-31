@@ -16,6 +16,7 @@ map.to = {
         msg = {
             id: message.id,
             command: message.command,
+            time: new Date(),
             sender: sender,
             payload: message.payload
         }
