@@ -1,0 +1,24 @@
+h1 nodeCQRS
+p At this point of development you can create, change and delete items. 
+p They are saved in a read model for presentation and in an eventstore for domain persitance.
+
+input(id='newItem', type='text', placeholder='create new Item...', data-bind="value: newItem")
+button(data-bind="click: createItem") create
+
+ol(data-bind="template: { name: 'itemTemplate', foreach: items }")
+span(data-bind='text: "items: " + items().length')
+
+// TEMPLATES
+script(id='itemTemplate', type='text/html')
+    li 
+        {{if $data == viewmodel.selectedItem()}}
+        input(data-bind='value: text')
+        button(data-bind="click: function() { viewmodel.changeItem() }") save
+        button(data-bind="click: function() { viewmodel.selectItem('')  }") cancel
+        {{else}}
+        span(data-bind='text: text')
+        button(data-bind="click: function() { viewmodel.selectItem($data) }") edit
+        button(data-bind="click: function() { viewmodel.deleteItem($data) }") remove
+        {{/if}}
+        
+p You can have multiple browser windows open - all get updated via socket.io.
