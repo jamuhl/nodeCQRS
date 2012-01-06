@@ -42,7 +42,6 @@ io.sockets.on('connection', function(socket) {
 
 hub.on('events', function(data) {
     console.log(colors.cyan('eventDenormalizer -- denormalize event ' + data.event));
-    console.log(JSON.stringify(data));
     handler.handle(data, null, 4);
     
     console.log(colors.magenta('\nsocket.io -- publish event ' + data.event + ' to browser'));
