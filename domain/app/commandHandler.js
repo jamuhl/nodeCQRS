@@ -23,7 +23,7 @@ var publisher = {
 };
 
 // eventstore
-var es = eventstore.createStore(/*{logger: 'console'}*/);
+var es = eventstore.createStore({logger: 'console'});
 
 storage.createStorage(function(err, db) {
     es.configure(function(){

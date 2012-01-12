@@ -52,7 +52,7 @@
         },
             
         _itemChanged: function(id, text) {
-            $.each(this.items(),function(item) {
+            $.each(this.items(),function(i, item) {
                 if (item.id === id) {
                     item.text(text);
                 }
@@ -60,9 +60,10 @@
         },
             
         _itemDeleted: function(id) {
-            $.each(this.items(),function(item) {
+            var self = this;
+            $.each(this.items(),function(i, item) {
                 if (item.id === id) {
-                    this.items.remove(item);
+                    self.items.remove(item);
                 }
             });
         }
