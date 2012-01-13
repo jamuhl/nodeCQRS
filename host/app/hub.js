@@ -1,3 +1,5 @@
+// the hub encapsulates functionality to send or receive messages from redis.
+
 var redis = require('redis')
   , colors = require('./colors')
   , map = require('./msgmap')
@@ -5,6 +7,7 @@ var redis = require('redis')
   , evt = redis.createClient()
   , subscriptions = [];
 
+// send commands to redis __commands channel__
 exports.emit = function(commandName, sender, message) {
     var data = map.to(commandName, sender, message);
     console.log(colors.blue('\nhub -- publishing command ' + commandName + ' to redis:'));
@@ -12,11 +15,13 @@ exports.emit = function(commandName, sender, message) {
     cmd.publish('commands', data);
 };
     
+// store subscriptions for a channel (mostly __events__) in a array
 exports.on = function(channel, callback) {
     subscriptions.push({channel: channel, callback: callback});
     console.log(colors.blue('hub -- subscribers: ' + subscriptions.length));
 };
     
+// listen to events from redis and call each callback from subscribers
 evt.on('message', function(channel, message) {
 
     var data = map.from(channel, message);
@@ -29,5 +34,6 @@ evt.on('message', function(channel, message) {
         }
     });
 });
-        
+
+// subscribe to __events channel__
 evt.subscribe('events');

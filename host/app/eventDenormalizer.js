@@ -1,9 +1,16 @@
+// the eventdenormalizer handles events and updates the viewmodel.
+
 var store = require ('./storage')
   , async = require ('async')
   , colors = require ('./colors');
 
 var eventHandler = {
     
+    // pass events to matching functions to:
+    //
+    // - create an item
+    // - change an item
+    // - delete an item
     handle: function(evt) {
         eventHandler[evt.event](evt);
     },

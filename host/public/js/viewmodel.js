@@ -1,10 +1,19 @@
+// the viewmodel holds the actual data and is bound to the html page in bootstrap.js
+//
+// - using [knockout.js MVVM](http://knockoutjs.com/) 
+
 (function() {
 
+    // an object for a single item
     var Item = function(id, text) {
         this.id = id;
         this.text = ko.observable(text);
     };
 
+    // the viewmodel:
+    // 
+    // - holding a collection of items
+    // - mapping UI events to commands
     var ViewModel = function() {
         this.items = ko.observableArray([]);
         this.newItem = ko.observable('');
@@ -13,6 +22,13 @@
 
     ViewModel.prototype = {
 
+        // UI event to select an item
+        selectItem: function(item) {
+            this.selectedItem(item);
+        },
+
+        // __Commands:__   
+        // are published via PubSub
         createItem: function() {
             PubSub.publish('commands', {
                 id: new ObjectId().toString(), 
@@ -20,10 +36,6 @@
                 payload: { text: this.newItem() }
             });
             this.newItem('');
-        },
-        
-        selectItem: function(item) {
-            this.selectedItem(item);
         },
             
         changeItem: function() {
@@ -47,8 +59,11 @@
             });
         },
 
-        _itemCreated: function(item) {
-            this.items.push(item);
+        // __Events:__   
+        // received from socket.io and passed in through 
+        // PubSub.
+        _itemCreated: function(id, text) {
+            this.items.push(new Item(id, text));
         },
             
         _itemChanged: function(id, text) {
@@ -71,6 +86,5 @@
     };
 
     window.ViewModel = ViewModel;
-    window.Item = Item;
   
 })();

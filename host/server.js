@@ -1,8 +1,15 @@
+// server.js is the starting point of the host process:
+//
+// `node server.js` 
 var express = require('express')
   , colors = require('./app/colors')
   , handler = require('./app/eventDenormalizer')
   , socket = require('socket.io');
 
+// create an configure:
+//
+// - express webserver
+// - socket.io socket communication from/to browser
 var app = express.createServer()
   , io = socket.listen(app);
 
@@ -27,7 +34,10 @@ require('./app/routes').actions(app);
 console.log('2. -> message hub'.cyan);
 var hub = require('./app/hub');
 
-// COMMUNICATION
+// SETUP COMMUNICATION CHANNELS
+
+// on receiving __commands__ from browser via socket.io emit them on the ĥub module (which will 
+// forward it to redis pubsub)
 io.sockets.on('connection', function(socket) {
     var conn = socket.handshake.address.address + ":" + socket.handshake.address.port;
     console.log(colors.magenta(conn + ' -- connects to socket.io'));
@@ -40,6 +50,10 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
+// on receiving an __event__ from redis via the hub module:
+//
+// - let it be handled from the eventDenormalizer to update the viewmodel storage
+// - forward it to connected browsers via socket.io
 hub.on('events', function(data) {
     console.log(colors.cyan('eventDenormalizer -- denormalize event ' + data.event));
     handler.handle(data, null, 4);

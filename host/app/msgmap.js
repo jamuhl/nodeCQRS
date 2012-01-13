@@ -1,3 +1,7 @@
+// the message map just enriches or reduces the commands/events 
+// received from browser / redis with additional 
+// information like sender and timestamp
+
 var map = {
     
     to: {  

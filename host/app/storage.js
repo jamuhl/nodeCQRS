@@ -1,3 +1,5 @@
+// simple storage for loading, changing and deleting items
+
 var redis = require('redis')
   , async = require('async')
   , colors = require('./colors');
