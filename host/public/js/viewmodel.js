@@ -86,5 +86,6 @@
     };
 
     window.ViewModel = ViewModel;
+    window.Item = Item;
   
 })();
