@@ -10,6 +10,7 @@
     
     // create a new viewmodel object
     var viewmodel = window.viewmodel = new window.ViewModel();
+    window.Item = function(id, text) {this.id = id; this.text = text};
 
     // readside of _CQRS_: we load all items on initial load and add them 
     // to the viewmodels itemcollection 
