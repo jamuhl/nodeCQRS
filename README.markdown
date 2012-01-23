@@ -2,8 +2,9 @@
 
 This is a sample implementation of CQRS / Eventsourcing Infrastructure in node.js using:
 
-- [redis](http://redis.io/) for Pub/Sub and Storage
+- [redis](http://redis.io/) for Pub/Sub and Storage.
 - [nodeEventStore](https://github.com/KABA-CCEAC/nodeEventStore) for EventSourcing including it's redis storage implementation.
+- [backbone.CQRS](https://github.com/jamuhl/backbone.CQRS) to bring CQRS to client with ease.
 
 ### get it up and running
         
