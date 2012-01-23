@@ -127,6 +127,9 @@
         options = options || {};
         if (options.forEvent) this.forEvent = options.forEvent;
         if (options.forModel) this.forModel = options.forModel;
+        this.methode = options.methode || 'update';
+        this.model = options.model;
+        this.collection = options.collection;
 
         if (this.forEvent && this.forModel) this.register.apply(this);
 
@@ -134,7 +137,7 @@
     };
 
 
-    // Set up all inheritable **Backbone.Router** properties and methods.
+    // Set up all inheritable properties and methods.
     _.extend(Backbone.CQRS.EventDenormalizer.prototype, Backbone.Events, {
 
         defaultPayloadValue: 'payload',
@@ -146,16 +149,31 @@
         // will be called by Backbone.CQRS.eventHandler 
         // models can listen to this event via myModel.bindCQRS()
         handle: function(evt) {
-            if (evt.id) {
-                this.trigger('change:' + evt.id, this.parse(evt), this.apply);
+            if (this.methode !== 'create') {
+                if (evt.id) {
+                    this.trigger('change:' + evt.id, this.parse(evt), this.apply(this.methode));
+                }
+            } else {
+                var mdl = new this.model(this.parse(evt));
+                this.collection.add(mdl);
             }
         },
 
         // as the denormalizer is for a specific model it can provide an 
         // apply function for the model
-        apply: function(data, model) {
-            model.set(data);
-        },
+        apply: function(methode) {
+            return function(data, model) {
+                if (methode === 'delete') {
+                    // unbind it
+                    if (model.isCQRSBound) model.unbindCQRS();
+
+                    // destroy it
+                    model.destroy();
+                } else {
+                    model.set(data);
+                }
+            };
+        },        
 
         // get the needed part from event to apply to model
         parse: function(evt) {
@@ -180,7 +198,7 @@
     });
 
     Backbone.CQRS.EventDenormalizer.extend = Backbone.Model.extend;
-
+    
 
     // Global EventHandler
     // -------------------
@@ -302,6 +320,7 @@
             var id = this.id || this.cid;
 
             Backbone.CQRS.eventHandler.bind(this.modelName + ':' + id, this.apply, this);
+            this.isCQRSBound = true;
         },
 
         unbindCQRS: function(modelName) {
@@ -310,6 +329,7 @@
             var id = this.id || this.cid;
 
             Backbone.CQRS.eventHandler.unbind(this.modelName + ':' + id, this.apply, this);
+            this.isCQRSBound = false;
         },
 
         // will call the provided function with the data from denormalizer 
@@ -321,6 +341,22 @@
         }
 
     });
+
+
+    // Modified Backbone.Sync
+    // ----------------------
+    var origSync = Backbone.sync;
+
+    Backbone.CQRS.sync = function(method, model, options) {
+        var type = methodMap[method];
+
+        // __only change is here__ only allow get!
+        if (type !== 'GET') {
+            return options.success();
+        } else {
+            origSync(method, model, options);
+        }
+    };
 
     // Functions
     // ---------
@@ -334,6 +370,14 @@
             x++;
         }
         return value;
+    };
+
+    // Mappings from backbone to server methode.
+    var methodMap = {
+     'create': 'POST',
+     'update': 'PUT',
+     'delete': 'DELETE',
+     'read': 'GET'
     };
 
 

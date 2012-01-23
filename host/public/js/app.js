@@ -1,10 +1,36 @@
 (function() {
 
+    // Create Backbone Model and Collection
+    // ------------------------------------
+
+    // model
+    var Item = Backbone.Model.extend({
+        modelName: 'item', // so denormalizers can resolve events to model
+        
+        initialize: function() {
+            // bind this model to get event updates - a lot of magic ;)
+            // not more to do the model gets updated now
+            this.bindCQRS(); 
+        }
+    });
+
+    // collection
+    var Items = Backbone.Collection.extend({
+        model: Item,
+        url: '/allItems.json'
+    });
+
+    var items = new Items();
+
+
     // Init Backbone.CQRS
     // ------------------
 
     // we just have to override eventNameAttr:
     Backbone.CQRS.hub.init({ eventNameAttr: 'event' });
+
+    // override Backbone.sync with CQRS.sync which allows only GET method
+    Backbone.sync = Backbone.CQRS.sync;
 
 
     // Wire up communication to/from server
@@ -29,75 +55,36 @@
     // Create a few EventDenormalizers
     // -------------------------------
 
-    // itemCreated event (override defaults)
-    var ItemCreateHandler = Backbone.CQRS.EventDenormalizer.extend({
+    // itemCreated event 
+    var itemCreateHandler = new Backbone.CQRS.EventDenormalizer({
+        methode: 'create',
+        model: Item,
+        collection: items,
 
         // bindings
         forModel: 'item',
-        forEvent: 'itemCreated',
-
-        // as the 'itemCreated' event creates a new model
-        // we override the handle function
-        handle: function(evt) {
-            var item = new Item(evt.get('payload'));
-            app.items.add(item);
-        }
+        forEvent: 'itemCreated'
     });
-    var itemCreateHandler = new ItemCreateHandler();
 
-    // itemChanged event (just go with defaults)
+    // itemChanged event
     var itemChangedHandler = new Backbone.CQRS.EventDenormalizer({
         forModel: 'item',
         forEvent: 'itemChanged'
     });
 
-    // itemDeleted event (override apply)
-    var ItemDeletedHandler = Backbone.CQRS.EventDenormalizer.extend({
+    // itemDeleted event 
+    var itemDeletedHandler = new Backbone.CQRS.EventDenormalizer({
+        methode: 'delete',
 
         // bindings
         forModel: 'item',
-        forEvent: 'itemDeleted',
-
-        // as the 'personDeleted' event destroys a model
-        // we override the apply function
-        apply: function(data, model) {
-            // unbind it
-            model.unbindCQRS();
-
-            // destroy it
-            model.destroy();
-        }
+        forEvent: 'itemDeleted'
     });
-    var itemDeletedHandler = new ItemDeletedHandler();
 
 
 
     // Create Backbone Stuff
     // ---------------------
-
-    // model
-    var Item = Backbone.Model.extend({
-        modelName: 'item', // so denormalizers can resolve events to model
-        
-        initialize: function() {
-            // bind this model to get event updates - a lot of magic ;)
-            // not more to do the model gets updated now
-            this.bindCQRS(); 
-        },
-
-        // as we don't have to sync the deletion to server as command already 
-        // took care of this we override the destroy function on model.
-        // HINT: best would be to override Backbone.sync to only support GET
-        destroy: function(options) {
-            this.trigger('destroy', this, this.collection, options);
-        }
-    });
-
-    // collection
-    var Items = Backbone.Collection.extend({
-        model: Item,
-        url: '/allItems.json'
-    });
 
     // view templates
     var itemTemplate = _.template('<%= text %> <a class="deleteItem" href="">delete</a> <a class="editItem" href="">edit</a>');
@@ -241,7 +228,7 @@
 
     var app = {};
     var init = function() {
-        app.items = new Items();
+        app.items = items;
         app.items.fetch();
 
         var indexView = new IndexView();
