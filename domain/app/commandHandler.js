@@ -108,7 +108,7 @@ var commandHandler = {
             function(item, callback) {
                 
                 console.log(colors.cyan('load history for id= ' +  item.id));
-                es.getEventStream(id, 0, function(err, stream) {                    
+                es.getEventStream(item.id, 0, function(err, stream) {                    
                     callback(null, item, stream);
                 });
             },
