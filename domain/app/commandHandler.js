@@ -36,19 +36,15 @@ var publisher = {
 // just create an instance and use one of the provided database providers
 var es = eventstore.createStore();
 
-// create a storage instance for the eventstore. when getting the client via callback 
 // configure the eventstore to use it and also inject the publisher implementation.
 //
 // finally start the eventstore instance so it will publish committed events to the provided 
 // publisher.
-storage.createStorage(function(err, db) {
-    es.configure(function(){
-        es.use(db);
-        es.use(publisher);
-    });
-
-    es.start();
-});
+es.configure(function(){
+    es.use(db);
+    es.use(publisher);
+    es.use(storage.createStorage());
+}).start();
 
 
 // for simplicity just map command names to event names. remove the command and change the message's id.
@@ -108,7 +104,7 @@ var commandHandler = {
             function(item, callback) {
                 
                 console.log(colors.cyan('load history for id= ' +  item.id));
-                es.getEventStream(item.id, 0, function(err, stream) {                    
+                es.getEventStream(item.id, function(err, stream) {                    
                     callback(null, item, stream);
                 });
             },
