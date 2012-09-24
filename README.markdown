@@ -77,12 +77,12 @@ Easy to read codebase to study further on how to do cqrs in node.js.
 
 ## Which one to choose?
 
-1 If your project is simple enough to be implemented in a traditional way - go for the traditional approach
+1.  If your project is simple enough to be implemented in a traditional way - go for the traditional approach
 
-2 If your project really profits from doing DDDD / CQRS it might be a good idea to create your own codebase (it's not to complicated, and 
+2.  If your project really profits from doing DDDD / CQRS it might be a good idea to create your own codebase (it's not to complicated, and 
 compared to the overall project size worth the effort as it's the core of your distributed system)
 
-3 If you need to get fast results and more than a sample - i would try adrai's modules.
+3.  If you need to get fast results and more than a sample - i would try adrai's modules.
 
 
 _complete list can be found under [node modules](https://github.com/joyent/node/wiki/Modules#wiki-ddd-cqrs-es)_
