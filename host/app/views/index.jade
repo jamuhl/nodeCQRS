@@ -1,11 +1,26 @@
-h1 nodeCQRS
-p At this point of development you can create, change and delete items. 
-p They are saved in a read model for presentation and in an eventstore for domain persitance.
+!!! 5
+html(lang="en")
+    head
+        title nodeCQRS - CQRS Sample with nodeEventStore
+    body
+        h1 nodeCQRS
+        p At this point of development you can create, change and delete items. 
+        p They are saved in a read model for presentation and in an eventstore for domain persitance.
 
-#index-view
-    input#newItemText(type="text")
-    button#addItem add
+        #index-view
+            input#newItemText(type="text")
+            button#addItem add
 
-    ul#items
+            ul#items
 
-p You can have multiple browser windows open - all get updated via socket.io.
+        p You can have multiple browser windows open - all get updated via socket.io.
+        
+        script(src='/js/lib/jquery-1.6.js', type='text/javascript')
+        script(src='/js/lib/underscore.js', type='text/javascript')
+        script(src='/js/lib/backbone.js', type='text/javascript')
+        script(src='/js/lib/backboneCQRS-0.4.js', type='text/javascript')
+        script(src='http://localhost:3000/socket.io/socket.io.js', type='text/javascript')
+        script(src='/js/app.js', type='text/javascript')
+
+
+

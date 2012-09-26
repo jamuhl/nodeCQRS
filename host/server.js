@@ -2,6 +2,7 @@
 //
 // `node server.js` 
 var express = require('express')
+  , http = require('http')
   , colors = require('./app/colors')
   , handler = require('./app/eventDenormalizer')
   , socket = require('socket.io');
@@ -10,8 +11,9 @@ var express = require('express')
 //
 // - express webserver
 // - socket.io socket communication from/to browser
-var app = express.createServer()
-  , io = socket.listen(app);
+var app = express()
+  , server = http.createServer(app)
+  , io = socket.listen(server);
 
 app.configure(function() {
     app.use(express.bodyParser());
@@ -65,4 +67,4 @@ hub.on('events', function(data) {
 // START LISTENING
 var port = 3000;
 console.log(colors.cyan('\nStarting server on port ' + port));
-app.listen(port);
+server.listen(port);
