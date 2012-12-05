@@ -33,6 +33,8 @@ thing to doing a little show case / demo code. If it can break - it will break.
 This modules are the result of open sourcing parts of a large reallife project of a distributed system based on the principle of 
 DDDD and CQRS. It's gone through a lot of iterations and should address most pitfalls.
 
+- you could find this sample done with adrai's framework at [adrai's cqrs-sample](https://github.com/adrai/cqrs-sample)
+
 The API is designed well so you can focus on the domain without worring to much about the infrastructure.
 
 - [domain](https://github.com/adrai/node-cqrs-domain)
