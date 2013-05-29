@@ -7,12 +7,18 @@ This is a sample implementation of CQRS / Eventsourcing Infrastructure in node.j
 - [backbone.CQRS](https://github.com/jamuhl/backbone.CQRS) to bring CQRS to client with ease.
 
 ### get it up and running
-        
-1.  start server in _host_ and _domain_ folder
+
+1.  start redis server
+
+        cd redis-x.x.x
+        // make
+        ./src/redis-server
+
+2.  start server in _host_ and _domain_ folder
 
         node server.js
         
-1.  direct your browser to 
+3.  direct your browser to 
 
         http://localhost:3000
         
