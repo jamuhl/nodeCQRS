@@ -1,7 +1,7 @@
 {
     "author": "Jan Muehlemann"
   , "name": "nodeCQRS"
-  , "version": "0.4.0"
+  , "version": "0.4.1"
   , "contributors": [ 
     { "name": "Jan Muehlemann", "email": "jan.muehlemann@gmail.com" }
   ]
@@ -19,7 +19,7 @@
       , "eventstore.redis": ">= 0.0.1"  
       , "redis": ">= 0.0.1"
       , "hiredis": ">= 0.0.1"
-      , "express": ">= 2.5.0"
+      , "express": ">= 3.0.0"
       , "jade": ">= 0.0.1"
       , "socket.io": ">= 0.0.1"
       , "async" : ">= 0.0.1"
