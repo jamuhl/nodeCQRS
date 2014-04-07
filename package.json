@@ -19,9 +19,9 @@
       , "eventstore.redis": ">= 0.0.1"  
       , "redis": ">= 0.0.1"
       , "hiredis": ">= 0.0.1"
-      , "express": ">= 3.0.0"
+      , "express": "= 3.4.8"
       , "jade": ">= 0.0.1"
-      , "socket.io": ">= 0.0.1"
+      , "socket.io": "= 0.9.16"
       , "async" : ">= 0.0.1"
   }
   , "devDependencies": { }
