@@ -56,13 +56,6 @@ The API is designed well so you can focus on the domain without worring to much 
 
 Documentation can be found [here](http://adrai.github.com/cqrs/)
 
-### brightas's modules
-
-Looking promising but still work in progress - hopefully reaching it's primetime soon.
-
-- [CQRS Framework](https://github.com/brighthas/cqrsnode)
-- [CQRS DbStore](https://github.com/brighthas/cqrsnode.dbstore)
-- [Eventstore](https://github.com/brighthas/cqrsnode.eventstore)
 
 ### petrjanda's module
 
@@ -70,17 +63,6 @@ Framework for non distributed system using couchDb as storage.
 
 - [CQRS Framework](https://github.com/petrjanda/node-cqrs)
 
-
-### goloroden's modules
-
-Easy to read codebase to study further on how to do cqrs in node.js. 
-
-- [cqrs-handlers](https://github.com/goloroden/cqrs-handlers)
-- [cqrs-eventstore](https://github.com/goloroden/cqrs-eventstore)
-- [cqrs-repository](https://github.com/goloroden/cqrs-repository)
-- [cqrs-bus](https://github.com/goloroden/cqrs-bus)
-- [cqrs-events](https://github.com/goloroden/cqrs-events)
-- [cqrs-commands](https://github.com/goloroden/cqrs-commands)
 
 
 
