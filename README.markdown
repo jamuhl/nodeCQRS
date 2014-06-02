@@ -64,6 +64,13 @@ Framework for non distributed system using couchDb as storage.
 - [CQRS Framework](https://github.com/petrjanda/node-cqrs)
 
 
+### efacilitation's module
+
+Build web applications based on Domain-driven Design and Layered Architecture.
+
+- [eventric](https://github.com/efacilitation/eventric)
+
+
 
 
 _complete list can be found under [node modules](https://github.com/joyent/node/wiki/Modules#wiki-ddd-cqrs-es)_
