@@ -15,8 +15,7 @@
         "node": ">= v0.4.0"
     }
   , "dependencies": {
-        "eventstore": ">= 0.0.1"
-      , "eventstore.redis": ">= 0.0.1"  
+        "eventstore": ">= 1.0.0"
       , "redis": ">= 0.0.1"
       , "hiredis": ">= 0.0.1"
       , "express": "= 3.4.8"

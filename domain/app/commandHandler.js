@@ -8,8 +8,7 @@ var redis = require('redis')
   , colors = require('./colors')
   , async = require('async')
   , items = require('./itemAggregate')
-  , eventstore = require('eventstore')
-  , storage = require('eventstore.redis');
+  , eventstore = require('eventstore');
 
 // create a redis client - we will use this later to get new aggregateIds
 var db = redis.createClient();
@@ -34,18 +33,14 @@ var publisher = {
 // for _EventSourcing_ we use [nodeEventStore](https://github.com/KABA-CCEAC/nodeEventStore):
 //
 // just create an instance and use one of the provided database providers
-var es = eventstore.createStore();
+var es = eventstore({ type: 'redis' });
 
 // configure the eventstore to use it and also inject the publisher implementation.
 //
 // finally start the eventstore instance so it will publish committed events to the provided 
 // publisher.
-es.configure(function(){
-    es.use(db);
-    es.use(publisher);
-    es.use(storage.createStorage());
-}).start();
-
+es.useEventPublisher(publisher.publish);
+es.init();
 
 // for simplicity just map command names to event names. remove the command and change the message's id.
 // in fact we just send back the received data with minor changes
@@ -86,7 +81,7 @@ var commandHandler = {
             // if the command provides no id (=createItem) - get a new id from redis db
             function(callback) {
                 if (!id) {
-                    db.incr('nextItemId', function(err, id) {
+                    es.getNewId(function(err, id) {
                         var newId = 'item:' + id;
                         
                         console.log(colors.cyan('create a new aggregate with id= ' + newId));
