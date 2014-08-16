@@ -3,7 +3,7 @@
 This is a sample implementation of CQRS / Eventsourcing Infrastructure in node.js using:
 
 - [redis](http://redis.io/) for Pub/Sub and Storage.
-- [nodeEventStore](https://github.com/jamuhl/nodeEventStore) for EventSourcing including it's redis storage implementation.
+- [node-eventstore](https://github.com/adrai/node-eventstore) for EventSourcing including it's redis storage implementation.
 - [backbone.CQRS](https://github.com/jamuhl/backbone.CQRS) to bring CQRS to client with ease.
 
 ### get it up and running
@@ -46,7 +46,7 @@ The API is designed well so you can focus on the domain without worring to much 
 - [domain](https://github.com/adrai/node-cqrs-domain)
 - [eventdenormalizing](https://github.com/adrai/node-cqrs-eventdenormalizer)
 - [viewmodel, read/write repository](https://github.com/adrai/node-viewmodel)
-- [eventstore](https://github.com/jamuhl/nodeEventStore)
+- [eventstore](https://github.com/adrai/node-eventstore)
 - [proper dequeing](https://github.com/adrai/node-queue)
 - [business-rules and validation](https://github.com/adrai/rule-validator)
 - [message bus](https://github.com/adrai/rabbitmq-nodejs-client)
